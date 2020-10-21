@@ -10,7 +10,7 @@ class Route
      *
      * @param array<string,array> $definitions
      */
-    public function __construct($definitions)
+    public function __construct(array $definitions)
     {
         $this->routes = $this->compileRoutes($definitions);
     }
@@ -21,7 +21,7 @@ class Route
      * @param array<string,array> $definitions
      * @return array<string,array>
      */
-    public function compileRoutes($definitions): array
+    public function compileRoutes(array $definitions): array
     {
         $routes = [];
 
@@ -48,7 +48,7 @@ class Route
      * @param string $path_info
      * @return array<string,string>|false
      */
-    public function resolve($path_info)
+    public function resolve(string $path_info)
     {
         if ('/' !== substr($path_info, 0, 1)) {
             $path_info = '/' . $path_info;
