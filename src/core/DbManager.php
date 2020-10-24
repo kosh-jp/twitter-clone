@@ -4,6 +4,8 @@ class DdManager
 {
     /** @var array<PDO> */
     protected $connections = [];
+    /** @var array<string,string> */
+    protected $repository_connection_map = [];
 
     /**
      * Create a new PDO instance
@@ -46,5 +48,35 @@ class DdManager
         }
 
         return $this->connections[$name];
+    }
+
+    /**
+     * Set a repository name
+     *
+     * @param string $repository_name
+     * @param string $name
+     * @return void
+     */
+    public function setRepositoryConnectionMap(string $repository_name, string $name): void
+    {
+        $this->repository_connection_map[$repository_name] = $name;
+    }
+
+    /**
+     * Get the database connection each repository
+     *
+     * @param string $repository_name
+     * @return PDO
+     */
+    public function getConnectionForRepository(string $repository_name): PDO
+    {
+        if (empty($this->repository_connection_map[$repository_name])) {
+            $con = $this->getConnection();
+        }
+
+        $name = $this->repository_connection_map[$repository_name];
+        $con = $this->getConnection($name);
+
+        return $con;
     }
 }
