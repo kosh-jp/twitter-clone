@@ -1,11 +1,15 @@
 <?php
 
+use DbRepository;
+
 class DdManager
 {
     /** @var array<PDO> */
     protected $connections = [];
     /** @var array<string,string> */
     protected $repository_connection_map = [];
+    /** @var array<DbRepository> */
+    protected $repositories = [];
 
     /**
      * Create a new PDO instance
@@ -78,5 +82,40 @@ class DdManager
         $con = $this->getConnection($name);
 
         return $con;
+    }
+
+    /**
+     * Get db repository
+     *
+     * @param string $repository_name
+     * @return DbRepository
+     */
+    public function get(string $repository_name): DbRepository
+    {
+        if (isset($this->repositories[$repository_name])) {
+            return $this->repositories[$repository_name];
+        }
+
+        $repository_class = $repository_name . 'Repository';
+        $con = $this->getConnectionForRepository($repository_name);
+        $repository = new $repository_class($con);
+        $this->repositories[$repository_name] = $repository;
+
+        return $this->repositories[$repository_name];
+    }
+
+    /**
+     * Destruct method
+     * Disconnect pdo connections
+     */
+    public function __destruct()
+    {
+        foreach ($this->repositories as $repository) {
+            unset($repository);
+        }
+
+        foreach ($this->connections as $con) {
+            unset($con);
+        }
     }
 }
