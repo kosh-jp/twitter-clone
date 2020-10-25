@@ -38,11 +38,32 @@ abstract class Controller
      *
      * @param string $action
      * @param array<string,string> $params
+     * @throws HttpNotFoundException
      * @return string
      */
     public function run(string $action, array $params = []): string
     {
-        // TODO
-        return '';
+        $this->action_name = $action;
+
+        $action_method = $action . 'Action';
+        if (!method_exists($this, $action_method)) {
+            $this->forward404();
+        }
+
+        $content = $this->$action_method($params);
+
+        return $content;
+    }
+
+    /**
+     * Throw HttpNotFoundException
+     *
+     * @throws HttpNotFoundException
+     */
+    protected function forward404(): HttpNotFoundException
+    {
+        throw new HttpNotFoundException(
+            'Forwarded 404 page from ' . $this->controller_name . '/' . $this->action_name
+        );
     }
 }
