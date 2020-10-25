@@ -1,8 +1,6 @@
 <?php
 
-use DbRepository;
-
-class DdManager
+class DbManager
 {
     /** @var array<PDO> */
     protected $connections = [];
