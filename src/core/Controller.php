@@ -93,4 +93,24 @@ abstract class Controller
             'Forwarded 404 page from ' . $this->controller_name . '/' . $this->action_name
         );
     }
+
+    /**
+     * Send a redirect response
+     *
+     * @param string $url
+     * @return void
+     */
+    protected function redirect(string $url): void
+    {
+        if (!preg_match('#https?://#', $url)) {
+            $protocol = $this->request->isSsl() ? 'https://' : 'http://';
+            $host = $this->request->getHost();
+            $base_url = $this->request->getBaseUrl();
+
+            $url = $protocol . $host . $base_url;
+        }
+
+        $this->response->setStatusCode(302, 'Found');
+        $this->response->setHttpHeader('Location', $url);
+    }
 }
