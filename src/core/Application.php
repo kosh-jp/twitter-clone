@@ -86,16 +86,19 @@ abstract class Application
      */
     public function run(): void
     {
-        $params = $this->router->resolve($this->request->getPathInfo());
-        if ($params === false) {
-            // TODO create 404 exception
-            throw new Exception();
+        try {
+            $params = $this->router->resolve($this->request->getPathInfo());
+            if ($params === false) {
+                throw new HttpNotFoundException();
+            }
+
+            $controller  = $params['controller'];
+            $action = $params['action'];
+
+            $this->runAction($controller, $action, $params);
+        } catch (HttpNotFoundException $e) {
+            $this->render404page($e);
         }
-
-        $controller  = $params['controller'];
-        $action = $params['action'];
-
-        $this->runAction($controller, $action, $params);
 
         $this->response->send();
     }
@@ -115,8 +118,7 @@ abstract class Application
 
         $controller = $this->findController($controller_class);
         if ($controller === false) {
-            // TODO create 404 exception
-            throw new Exception();
+            throw new HttpNotFoundException();
         }
 
         $content = $controller->run($action, $params);
@@ -148,6 +150,33 @@ abstract class Application
         }
 
         return new $controller_class($this);
+    }
+
+    /**
+     * Set 404 not found html as content
+     *
+     * @param HttpNotFoundException $e
+     * @return void
+     */
+    protected function render404page(HttpNotFoundException $e): void
+    {
+        $this->response->setStatusCode(404, 'Not Found');
+        $message = $this->isDebugMode() ? $e->getMessage() : 'Page not found';
+        $message = htmlspecialchars($message, ENT_QUOTES);
+
+        $this->response->setContent(<<<EOF
+            <!DOCTYPE html>
+            <html lang="ja">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>404|Not Found</title>
+            </head>
+            <body>
+                {$message}
+            </body>
+            </html>
+        EOF);
     }
 
     public function isDebugMode(): bool
