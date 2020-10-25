@@ -83,4 +83,27 @@ class Session
             self::$session_id_regenerated = true;
         }
     }
+
+    /**
+     * Set an authenticated
+     *
+     * @param bool $bool
+     * @return void
+     */
+    public function setAuthenticated($bool): void
+    {
+        $this->set('_authenticated', (bool)$bool);
+
+        $this->regenerate();
+    }
+
+    /**
+     * Return true if authenticated
+     *
+     * @return bool
+     */
+    public function isAuthenticated(): bool
+    {
+        return $this->get('_authenticated', false);
+    }
 }
