@@ -89,7 +89,7 @@ abstract class Application
         try {
             $params = $this->router->resolve($this->request->getPathInfo());
             if ($params === false) {
-                throw new HttpNotFoundException();
+                throw new HttpNotFoundException('No route found for ' . $this->request->getPathInfo());
             }
 
             $controller  = $params['controller'];
@@ -109,7 +109,7 @@ abstract class Application
      * @param string $controller_name
      * @param string $action
      * @param array<string,string> $params
-     * @throws Exception
+     * @throws HttpNotFoundException
      * @return void
      */
     public function runAction(string $controller_name, string $action, array $params = []): void
@@ -118,7 +118,7 @@ abstract class Application
 
         $controller = $this->findController($controller_class);
         if ($controller === false) {
-            throw new HttpNotFoundException();
+            throw new HttpNotFoundException($controller_class . ' controller is not found.');
         }
 
         $content = $controller->run($action, $params);
@@ -130,7 +130,7 @@ abstract class Application
      * Load a controller class instance
      *
      * @param string $controller_class
-     * @throws Exception
+     * @throws HttpNotFoundException
      * @return Controller|false
      */
     public function findController(string $controller_class)
