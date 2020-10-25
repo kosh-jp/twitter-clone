@@ -56,6 +56,33 @@ abstract class Controller
     }
 
     /**
+     * Get the string contents of the view
+     *
+     * @param array<string,string> $variables
+     * @param string $template
+     * @param string $layout
+     * @return string
+     */
+    protected function render(array $variables = [], string $template = '', string $layout = 'layout'): string
+    {
+        $defaults = [
+            'request' => $this->request,
+            'base_url' => $this->request->getBaseUrl(),
+            'session' => $this->session
+        ];
+
+        $view = new View($this->application->getViewDir(), $defaults);
+
+        if (!$template) {
+            $template = $this->action_name;
+        }
+
+        $path = $this->controller_name . '/' . $template;
+
+        return $view->render($path, $variables, $layout);
+    }
+
+    /**
      * Throw HttpNotFoundException
      *
      * @throws HttpNotFoundException

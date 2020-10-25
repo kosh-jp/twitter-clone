@@ -162,7 +162,7 @@ abstract class Application
     {
         $this->response->setStatusCode(404, 'Not Found');
         $message = $this->isDebugMode() ? $e->getMessage() : 'Page not found';
-        $message = htmlspecialchars($message, ENT_QUOTES);
+        $message = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
 
         $this->response->setContent(<<<EOF
             <!DOCTYPE html>
