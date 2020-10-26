@@ -4,6 +4,8 @@ abstract class Application
 {
     /** @var bool */
     protected $debug = false;
+    /** @var array<string> */
+    protected $login_action = [];
     /** @var Request */
     protected $request;
     /** @var Response */
@@ -98,6 +100,9 @@ abstract class Application
             $this->runAction($controller, $action, $params);
         } catch (HttpNotFoundException $e) {
             $this->render404page($e);
+        } catch (UnauthorizedActionException $e) {
+            list($controller, $action) = $this->login_action;
+            $this->runAction($controller, $action);
         }
 
         $this->response->send();

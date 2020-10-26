@@ -6,6 +6,8 @@ abstract class Controller
     protected $controller_name;
     /** @var string */
     protected $action_name;
+    /** @var array<string>|bool */
+    protected $auth_actions;
     /** @var Application */
     protected $application;
     /** @var Request */
@@ -48,6 +50,10 @@ abstract class Controller
         $action_method = $action . 'Action';
         if (!method_exists($this, $action_method)) {
             $this->forward404();
+        }
+
+        if ($this->needsAuthentication($action) && !$this->session->isAuthenticated()) {
+            throw new UnauthorizedActionException();
         }
 
         $content = $this->$action_method($params);
@@ -154,5 +160,23 @@ abstract class Controller
         $this->session->set($key, $tokens);
 
         return true;
+    }
+
+    /**
+     * Return true if action is to need authentication
+     *
+     * @param string $action
+     * @return bool
+     */
+    protected function needsAuthentication(string $action)
+    {
+        if ($this->auth_actions === true) {
+            return true;
+        }
+        if (is_array($this->auth_actions) && in_array($action, $this->auth_actions)) {
+            return true;
+        }
+
+        return false;
     }
 }
