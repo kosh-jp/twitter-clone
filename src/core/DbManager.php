@@ -22,7 +22,7 @@ class DbManager
             'dsn' => null,
             'user' => '',
             'password' => '',
-            'option' => [],
+            'options' => [],
         ], $params);
 
         $con = new PDO(

@@ -83,7 +83,7 @@ class Request
      */
     public function getRequestUri(): string
     {
-        return $_SERVER['REQUEST_URL'];
+        return $_SERVER['REQUEST_URI'];
     }
 
     /**
