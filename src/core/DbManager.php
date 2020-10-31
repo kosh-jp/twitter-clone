@@ -73,7 +73,7 @@ class DbManager
     public function getConnectionForRepository(string $repository_name): PDO
     {
         if (empty($this->repository_connection_map[$repository_name])) {
-            $con = $this->getConnection();
+            return $this->getConnection();
         }
 
         $name = $this->repository_connection_map[$repository_name];
