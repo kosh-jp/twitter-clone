@@ -104,9 +104,9 @@ abstract class Controller
      * Send a redirect response
      *
      * @param string $url
-     * @return void
+     * @return null
      */
-    protected function redirect(string $url): void
+    protected function redirect(string $url): ?string
     {
         if (!preg_match('#https?://#', $url)) {
             $protocol = $this->request->isSsl() ? 'https://' : 'http://';
@@ -118,6 +118,8 @@ abstract class Controller
 
         $this->response->setStatusCode(302, 'Found');
         $this->response->setHttpHeader('Location', $url);
+
+        return null;
     }
 
     /**
