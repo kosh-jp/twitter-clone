@@ -51,7 +51,9 @@ abstract class DbRepository
      */
     public function fetch(string $sql, array $params = []): array
     {
-        return $this->execute($sql, $params)->fetch(PDO::FETCH_ASSOC);
+        $result = $this->execute($sql, $params)->fetch(PDO::FETCH_ASSOC);
+
+        return $result ?: [];
     }
 
     /**
