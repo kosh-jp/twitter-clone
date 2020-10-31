@@ -41,9 +41,9 @@ abstract class Controller
      * @param string $action
      * @param array<string,string> $params
      * @throws HttpNotFoundException
-     * @return string
+     * @return mixed
      */
-    public function run(string $action, array $params = []): string
+    public function run(string $action, array $params = [])
     {
         $this->action_name = $action;
 
@@ -113,7 +113,7 @@ abstract class Controller
             $host = $this->request->getHost();
             $base_url = $this->request->getBaseUrl();
 
-            $url = $protocol . $host . $base_url;
+            $url = $protocol . $host . $base_url . $url;
         }
 
         $this->response->setStatusCode(302, 'Found');

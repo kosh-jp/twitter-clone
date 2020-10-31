@@ -128,7 +128,9 @@ abstract class Application
 
         $content = $controller->run($action, $params);
 
-        $this->response->setContent($content);
+        if (!is_null($content)) {
+            $this->response->setContent($content);
+        }
     }
 
     /**
