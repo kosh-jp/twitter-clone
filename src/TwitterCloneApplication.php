@@ -20,6 +20,14 @@ class TwitterCloneApplication extends Application
                 'controller' => 'status',
                 'action' => 'post'
             ],
+            '/user/:user_name' => [
+                'controller' => 'status',
+                'action' => 'user'
+            ],
+            '/user/:user_name/status/:id' => [
+                'controller' => 'status',
+                'action' => 'show'
+            ],
             '/account' => [
                 'controller' => 'account',
                 'action' => 'index'

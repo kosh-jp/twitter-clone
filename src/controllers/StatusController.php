@@ -4,6 +4,8 @@ class StatusController extends Controller
 {
     /** @var StatusRepository */
     protected $statusRepository;
+    /** @var UserRepository */
+    protected $userRepository;
 
     /**
      * {@inheritDoc}
@@ -15,6 +17,7 @@ class StatusController extends Controller
         parent::__construct($application);
 
         $this->statusRepository = $this->db_manager->get('Status');
+        $this->userRepository = $this->db_manager->get('User');
     }
 
     /**
@@ -64,5 +67,21 @@ class StatusController extends Controller
         $statuses = $this->statusRepository->fetchAllPersonalArchivesByUserId($user['id']);
         $_token = $this->generateCsrfToken('status/post');
         return $this->render(compact('errors', 'statuses', 'body', '_token'), 'index');
+    }
+
+    /**
+     * @throws HttpNotFoundException
+     * @param array<string,string> $params
+     * @return string
+     */
+    public function userAction(array $params): string
+    {
+        $user = $this->userRepository->fetchByUserName($params['user_name']);
+        if (empty($user)) {
+            $this->forward404();
+        }
+
+        $statuses = $this->statusRepository->fetchAllByUserId($user['id']);
+        return $this->render(compact('user', 'statuses'));
     }
 }
