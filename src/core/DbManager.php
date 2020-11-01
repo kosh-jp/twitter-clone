@@ -86,9 +86,9 @@ class DbManager
      * Get db repository
      *
      * @param string $repository_name
-     * @return DbRepository
+     * @return mixed
      */
-    public function get(string $repository_name): DbRepository
+    public function get(string $repository_name)
     {
         if (isset($this->repositories[$repository_name])) {
             return $this->repositories[$repository_name];
