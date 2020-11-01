@@ -1,21 +1,15 @@
 <?php
 
 /** @var View $this */
+$this->setLayoutVar('title', 'アカウント登録')
 ?>
-<?php $this->setLayoutVar('title', 'アカウント登録') ?>
 
 <h2>アカウント登録</h2>
 
 <form action="<?= $base_url ?>/account/register" method="post">
     <input type="hidden" name="_token" value="<?= $this->escape($_token) ?>">
 
-    <?php if (!empty($errors)) : ?>
-        <ul class="error_list">
-            <?php foreach ($errors as $error) : ?>
-                <li><?= $this->escape($error) ?></li>
-            <?php endforeach; ?>
-        </ul>
-    <?php endif; ?>
+    <?= $this->render('errors', ['errors' => $errors ?? []]) ?>
 
     <table>
         <tbody>
