@@ -5,6 +5,16 @@ class AccountController extends Controller
     /**
      * @return string
      */
+    public function indexAction(): string
+    {
+        $user = $this->session->get('user');
+
+        return $this->render(compact('user'));
+    }
+
+    /**
+     * @return string
+     */
     public function signupAction(): string
     {
         return $this->render([

@@ -9,7 +9,7 @@
 
 <body>
     <div id="header">
-        <h1><a href="<?= $base_url ?>">TwitterClone</a></h1>
+        <h1><a href="<?= $base_url ?>/">TwitterClone</a></h1>
     </div>
 
     <div id="main">
