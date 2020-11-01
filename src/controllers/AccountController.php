@@ -52,7 +52,11 @@ class AccountController extends Controller
         }
 
         if (count($errors) === 0) {
-            $user_repository->insert($user_name, $password);
+            $_token = $this->generateCsrfToken('account/signup');
+            return $this->render(compact('user_name', 'password', '_token', 'errors'), 'signup');
+        }
+
+        if ($user_repository->insert($user_name, $password)) {
             $this->session->setAuthenticated(true);
 
             $user = $user_repository->fetchByUserName($user_name);
@@ -61,6 +65,7 @@ class AccountController extends Controller
             return $this->redirect('/');
         }
 
+        $errors[] = 'エラーが発生しました。時間をおいて再度試してください';
         $_token = $this->generateCsrfToken('account/signup');
         return $this->render(compact('user_name', 'password', '_token', 'errors'), 'signup');
     }

@@ -18,16 +18,4 @@ $this->setLayoutVar('title', 'ホーム');
     </p>
 </form>
 
-<div id="statuses">
-    <?php foreach ($statuses as $status) : ?>
-        <div class="status">
-            <div class="status_content">
-                <?= $this->escape($status['user_name']) ?>
-                <?= $this->escape($status['body']) ?>
-            </div>
-            <div>
-                <?= $this->escape($status['created_at']) ?>
-            </div>
-        </div>
-    <?php endforeach; ?>
-</div>
+<?= $this->render('status/status', ['statuses' => $statuses ?? []]) ?>

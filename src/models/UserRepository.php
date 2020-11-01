@@ -5,18 +5,31 @@ class UserRepository extends DbRepository
     /**
      * @param string $user_name
      * @param string $password
-     * @return void
+     * @return bool
      */
-    public function insert(string $user_name, string $password): void
+    public function insert(string $user_name, string $password): bool
     {
         $password = password_hash($password, PASSWORD_ARGON2ID);
+        if (empty($password)) {
+            return false;
+        }
         $now = new DateTime();
         $created_at = $now->format('Y-m-d H:i:s');
 
         $sql = "INSERT INTO user(user_name, password, created_at)
             VALUE (:user_name, :password, :created_at)";
 
-        $stmt = $this->execute($sql, compact('user_name', 'password', 'created_at'));
+        $stmt = $this->execute($sql, [
+            ':user_name' => $user_name,
+            ':password' => $password,
+            ':created_at' => $created_at,
+        ]);
+
+        if ($stmt == false) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -27,7 +40,9 @@ class UserRepository extends DbRepository
     {
         $sql = "SELECT * FROM user WHERE user_name = :user_name";
 
-        return $this->fetch($sql, [':user_name' => $user_name]);
+        return $this->fetch($sql, [
+            ':user_name' => $user_name
+        ]);
     }
 
     /**

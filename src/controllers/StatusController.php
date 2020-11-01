@@ -4,6 +4,8 @@ class StatusController extends Controller
 {
     /** @var StatusRepository */
     protected $statusRepository;
+    /** @var UserRepository */
+    protected $userRepository;
 
     /**
      * {@inheritDoc}
@@ -15,6 +17,7 @@ class StatusController extends Controller
         parent::__construct($application);
 
         $this->statusRepository = $this->db_manager->get('Status');
+        $this->userRepository = $this->db_manager->get('User');
     }
 
     /**
@@ -58,13 +61,42 @@ class StatusController extends Controller
         if (count($errors) === 0) {
             $user = $this->session->get('user');
             $this->statusRepository->insert($user['id'], $body);
-
-            return $this->redirect('/');
         }
 
         $user = $this->session->get('user');
         $statuses = $this->statusRepository->fetchAllPersonalArchivesByUserId($user['id']);
         $_token = $this->generateCsrfToken('status/post');
         return $this->render(compact('errors', 'statuses', 'body', '_token'), 'index');
+    }
+
+    /**
+     * @throws HttpNotFoundException
+     * @param array<string,string> $params
+     * @return string
+     */
+    public function userAction(array $params): string
+    {
+        $user = $this->userRepository->fetchByUserName($params['user_name']);
+        if (empty($user)) {
+            $this->forward404();
+        }
+
+        $statuses = $this->statusRepository->fetchAllByUserId($user['id']);
+        return $this->render(compact('user', 'statuses'));
+    }
+
+    /**
+     * @param array<string,string> $params
+     * @throws HttpNotFoundException
+     * @return string
+     */
+    public function showAction(array $params): string
+    {
+        $status = $this->statusRepository->fetchByIdAndUserName($params['id'], $params['user_name']);
+        if (empty($status)) {
+            $this->forward404();
+        }
+
+        return $this->render(compact('status'));
     }
 }
