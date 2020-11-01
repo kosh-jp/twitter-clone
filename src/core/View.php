@@ -56,7 +56,7 @@ class View
 
         $content = ob_get_clean();
 
-        if (!$content) {
+        if (!is_string($content)) {
             throw new HttpNotFoundException('Not found view file: ' . $_file);
         }
 
