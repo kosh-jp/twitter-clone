@@ -38,4 +38,40 @@ class StatusRepository extends DbRepository
             ':user_id' => $user_id
         ]);
     }
+
+    /**
+     * @param string $user_id
+     * @return array<string,string>
+     */
+    public function fetchAllByUserId(string $user_id): array
+    {
+        $sql = "SELECT status.*, user.user_name
+                FROM status
+                    LEFT JOIN user ON status.user_id = user.id
+                WHERE user.id = :user_id
+                ORDER BY status.created_at DESC";
+
+        return $this->fetchAll($sql, [
+            ':user_id' => $user_id
+        ]);
+    }
+
+    /**
+     * @param string $id
+     * @param string $user_name
+     * @return array<string,string>
+     */
+    public function fetchByIdAndUserName(string $id, string $user_name): array
+    {
+        $sql = "SELECT status.*, user.user_name
+                FROM status
+                    LEFT JOIN user ON status.user_id = user.id
+                WHERE status.id = :id
+                    AND user.user_name = :user_name";
+
+        return $this->fetch($sql, [
+            ':id' => $id,
+            ':user_name' => $user_name
+        ]);
+    }
 }
