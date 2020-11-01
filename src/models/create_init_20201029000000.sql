@@ -12,7 +12,7 @@ CREATE TABLE status(
   body VARCHAR(255),
   created_at DATETIME,
   PRIMARY KEY(id),
-  UNIQUE KEY user_id_index(user_id),
+  INDEX user_id_index(user_id),
   FOREIGN KEY (user_id) REFERENCES user(id)
 );
 CREATE TABLE following(

@@ -15,7 +15,11 @@ class StatusRepository extends DbRepository
         $sql = "INSERT INTO status(user_id, body, created_at)
             VALUE (:user_id, :body, :created_at)";
 
-        $stmt = $this->execute($sql, compact('user_id', 'body', 'created_at'));
+        $stmt = $this->execute($sql, [
+            ':user_id' => $user_id,
+            ':body' => $body,
+            ':created_at' => $created_at
+        ]);
     }
 
     /**
@@ -30,6 +34,8 @@ class StatusRepository extends DbRepository
                 WHERE user.id = :user_id
                 ORDER BY status.created_at DESC";
 
-        return $this->fetchAll($sql, compact('user_id'));
+        return $this->fetchAll($sql, [
+            ':user_id' => $user_id
+        ]);
     }
 }

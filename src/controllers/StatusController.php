@@ -58,8 +58,6 @@ class StatusController extends Controller
         if (count($errors) === 0) {
             $user = $this->session->get('user');
             $this->statusRepository->insert($user['id'], $body);
-
-            return $this->redirect('/');
         }
 
         $user = $this->session->get('user');
