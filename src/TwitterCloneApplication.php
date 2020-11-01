@@ -12,6 +12,14 @@ class TwitterCloneApplication extends Application
     protected function registerRoutes(): array
     {
         return [
+            '/' => [
+                'controller' => 'status',
+                'action' => 'index'
+            ],
+            '/status/post' => [
+                'controller' => 'status',
+                'action' => 'post'
+            ],
             '/account' => [
                 'controller' => 'account',
                 'action' => 'index'

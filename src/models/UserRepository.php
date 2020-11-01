@@ -21,9 +21,9 @@ class UserRepository extends DbRepository
 
     /**
      * @param string $user_name
-     * @return array<string,string>|false
+     * @return array<string,string>
      */
-    public function fetchByUserName(string $user_name)
+    public function fetchByUserName(string $user_name): array
     {
         $sql = "SELECT * FROM user WHERE user_name = :user_name";
 
