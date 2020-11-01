@@ -13,14 +13,34 @@ class AccountController extends Controller
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function signupAction(): string
+    public function signinAction(): ?string
     {
+        if ($this->session->isAuthenticated()) {
+            return $this->redirect('/account');
+        }
+
         return $this->render([
             'user_name' => '',
             'password' => '',
-            '_token' => $this->generateCsrfToken('account/signup')
+            '_token' => $this->generateCsrfToken('account/signin'),
+        ]);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function signupAction(): ?string
+    {
+        if ($this->session->isAuthenticated()) {
+            return $this->redirect('/account');
+        }
+
+        return $this->render([
+            'user_name' => '',
+            'password' => '',
+            '_token' => $this->generateCsrfToken('account/signup'),
         ]);
     }
 
@@ -28,8 +48,11 @@ class AccountController extends Controller
      * @throws HttpNotFoundException
      * @return string|null
      */
-    public function registerAction()
+    public function registerAction(): ?string
     {
+        if ($this->session->isAuthenticated()) {
+            return $this->redirect('/account');
+        }
         /** @var UserRepository $user_repository */
         $user_repository = $this->db_manager->get('User');
 
