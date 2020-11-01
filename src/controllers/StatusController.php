@@ -84,4 +84,19 @@ class StatusController extends Controller
         $statuses = $this->statusRepository->fetchAllByUserId($user['id']);
         return $this->render(compact('user', 'statuses'));
     }
+
+    /**
+     * @param array<string,string> $params
+     * @throws HttpNotFoundException
+     * @return string
+     */
+    public function showAction(array $params): string
+    {
+        $status = $this->statusRepository->fetchByIdAndUserName($params['id'], $params['user_name']);
+        if (empty($status)) {
+            $this->forward404();
+        }
+
+        return $this->render(compact('status'));
+    }
 }
