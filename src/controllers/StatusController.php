@@ -10,7 +10,7 @@ class StatusController extends Controller
     /**
      * {@inheritDoc}
      *
-     * With loading StatusRepository class
+     * With loading DbRepositories
      */
     public function __construct(Application $application)
     {
