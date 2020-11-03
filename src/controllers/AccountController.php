@@ -4,6 +4,8 @@ class AccountController extends Controller
 {
     /** @var UserRepository $user_repository */
     protected $user_repository;
+    /** @var array<string>|bool */
+    protected $auth_actions = ['index', 'signout'];
 
     /**
      * {@inheritDoc}

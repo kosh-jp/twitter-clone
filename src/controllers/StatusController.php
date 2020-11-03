@@ -6,6 +6,8 @@ class StatusController extends Controller
     protected $statusRepository;
     /** @var UserRepository */
     protected $userRepository;
+    /** @var array<string>|bool */
+    protected $auth_actions = ['index', 'post'];
 
     /**
      * {@inheritDoc}
