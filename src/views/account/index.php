@@ -20,3 +20,13 @@ $this->setLayoutVar('title', 'アカウント');
         <a href="<?= $base_url ?>/account/signout">ログアウト</a>
     </li>
 </ul>
+
+<h3>フォロー中</h3>
+
+<ul>
+    <?php foreach ($followings as $following) : ?>
+        <a href="<?= $base_url . '/user/' . $this->escape($following['user_name']) ?>">
+            <?= $this->escape($following['user_name']) ?>
+        </a>
+    <?php endforeach ?>
+</ul>

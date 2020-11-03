@@ -29,8 +29,9 @@ class AccountController extends Controller
     public function indexAction(): string
     {
         $user = $this->session->get('user');
+        $followings = $this->user_repository->fetchAllFollowingsByUserId($user['id']);
 
-        return $this->render(compact('user'));
+        return $this->render(compact('user', 'followings'));
     }
 
     /**
