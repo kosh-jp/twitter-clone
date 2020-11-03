@@ -2,6 +2,8 @@
 
 class StatusController extends Controller
 {
+    /** @var FollowingRepository */
+    protected $followingRepository;
     /** @var StatusRepository */
     protected $statusRepository;
     /** @var UserRepository */
@@ -18,6 +20,7 @@ class StatusController extends Controller
     {
         parent::__construct($application);
 
+        $this->followingRepository = $this->db_manager->get('Following');
         $this->statusRepository = $this->db_manager->get('Status');
         $this->userRepository = $this->db_manager->get('User');
     }
@@ -72,8 +75,8 @@ class StatusController extends Controller
     }
 
     /**
-     * @throws HttpNotFoundException
      * @param array<string,string> $params
+     * @throws HttpNotFoundException
      * @return string
      */
     public function userAction(array $params): string
@@ -83,8 +86,17 @@ class StatusController extends Controller
             $this->forward404();
         }
 
+        $following = null;
+        if ($this->session->isAuthenticated()) {
+            $my = $this->session->get('user');
+            if ($my['id'] !== $user['id']) {
+                $following = $this->followingRepository->isFollowing($my['id'], $user['id']);
+            }
+        }
+
         $statuses = $this->statusRepository->fetchAllByUserId($user['id']);
-        return $this->render(compact('user', 'statuses'));
+        $_token = $this->generateCsrfToken('account/follow');
+        return $this->render(compact('user', 'statuses', 'following', '_token'));
     }
 
     /**

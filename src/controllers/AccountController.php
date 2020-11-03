@@ -2,10 +2,12 @@
 
 class AccountController extends Controller
 {
+    /** @var FollowingRepository $following_repository */
+    protected $following_repository;
     /** @var UserRepository $user_repository */
     protected $user_repository;
     /** @var array<string>|bool */
-    protected $auth_actions = ['index', 'signout'];
+    protected $auth_actions = ['index', 'signout', 'follow'];
 
     /**
      * {@inheritDoc}
@@ -16,6 +18,7 @@ class AccountController extends Controller
     {
         parent::__construct($application);
 
+        $this->following_repository = $this->db_manager->get('Following');
         $this->user_repository = $this->db_manager->get('User');
     }
 
@@ -176,5 +179,42 @@ class AccountController extends Controller
         $errors[] = 'エラーが発生しました。時間をおいて再度試してください';
         $_token = $this->generateCsrfToken('account/signup');
         return $this->render(compact('user_name', 'password', '_token', 'errors'), 'signup');
+    }
+
+    /**
+     * @throws HttpNotFoundException
+     * @return string|null
+     */
+    public function followAction(): ?string
+    {
+        if (!$this->request->isPost()) {
+            $this->forward404();
+        }
+
+        $following_name = $this->request->getPost('following_name');
+        if (!$following_name) {
+            $this->forward404();
+        }
+
+        $token = $this->request->getPost('_token');
+        if (!$this->checkCsrfToken('account/follow', $token)) {
+            return $this->redirect('/user/' . $following_name);
+        }
+
+        $follow_user = $this->user_repository->fetchByUserName($following_name);
+        if (empty($follow_user)) {
+            $this->forward404();
+        }
+
+        $user = $this->session->get('user');
+
+        if (
+            $user['id'] !== $follow_user['id']
+            && !$this->following_repository->isFollowing($user['id'], $follow_user['id'])
+        ) {
+            $this->following_repository->insert($user['id'], $follow_user['id']);
+        }
+
+        return $this->redirect('/account');
     }
 }

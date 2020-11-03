@@ -34,7 +34,11 @@ class TwitterCloneApplication extends Application
             ],
             '/account/:action' => [
                 'controller' => 'account'
-            ]
+            ],
+            '/follow' => [
+                'controller' => 'account',
+                'action' => 'follow'
+            ],
         ];
     }
 
