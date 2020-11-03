@@ -9,7 +9,19 @@
 
 <body>
     <div id="header">
-        <h1><a href="<?= $base_url ?>">TwitterClone</a></h1>
+        <h1><a href="<?= $base_url ?>/">TwitterClone</a></h1>
+    </div>
+
+    <div id="nav">
+        <p>
+            <?php if ($session->isAuthenticated()) : ?>
+                <a href="<?= $base_url ?>/">ホーム</a>
+                <a href="<?= $base_url ?>/account">アカウント</a>
+            <?php else : ?>
+                <a href="<?= $base_url ?>/account/signin">ログイン</a>
+                <a href="<?= $base_url ?>/account/signup">アカウント登録</a>
+            <?php endif ?>
+        </p>
     </div>
 
     <div id="main">

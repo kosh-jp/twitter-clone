@@ -1,12 +1,15 @@
 <?php
 
 /** @var View $this */
-$this->setLayoutVar('title', 'アカウント登録')
+$this->setLayoutVar('title', 'ログイン');
 ?>
+<h2>ログイン</h2>
 
-<h2>アカウント登録</h2>
+<p>
+    <a href="<?= $base_url ?>/account/signup">ユーザー登録</a>
+</p>
 
-<form action="<?= $base_url ?>/account/register" method="post">
+<form action="<?= $base_url ?>/account/authenticate" method="post">
     <input type="hidden" name="_token" value="<?= $this->escape($_token) ?>">
 
     <?= $this->render('errors', ['errors' => $errors ?? []]) ?>
@@ -14,6 +17,7 @@ $this->setLayoutVar('title', 'アカウント登録')
     <?= $this->render('account/inputs', compact('user_name', 'password')) ?>
 
     <p>
-        <input type="submit" value="登録">
+        <input type="submit" value="ログイン">
     </p>
+
 </form>
